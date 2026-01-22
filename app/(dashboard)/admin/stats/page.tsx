@@ -116,25 +116,25 @@ export default function AdminStatsPage() {
       ['', '', ''],
 
       // SLA
-      ['Cumplimiento SLA', `${stats.slaCompliance?.met || 0}%`, ''],
-      ['SLA Cumplidos', `${stats.slaCompliance?.met || 0}%`, ''],
-      ['SLA en Riesgo', `${stats.slaCompliance?.atRisk || 0}%`, ''],
-      ['SLA Incumplidos', `${stats.slaCompliance?.breached || 0}%`, ''],
+      ['Cumplimiento SLA', `${stats?.slaCompliance?.met || 0}%`, ''],
+      ['SLA Cumplidos', `${stats?.slaCompliance?.met || 0}%`, ''],
+      ['SLA en Riesgo', `${stats?.slaCompliance?.atRisk || 0}%`, ''],
+      ['SLA Incumplidos', `${stats?.slaCompliance?.breached || 0}%`, ''],
       ['', '', ''],
 
       // Satisfacción
-      ['Satisfacción del Cliente', stats.satisfaction?.score || '0', ''],
-      ['Total Evaluaciones', stats.satisfaction?.count || 0, ''],
+      ['Satisfacción del Cliente', stats?.satisfaction?.score || '0', ''],
+      ['Total Evaluaciones', stats?.satisfaction?.count || 0, ''],
       ['', '', ''],
 
       // Tickets por categoría
       ['Categoría', 'Cantidad', ''],
-      ...(stats.ticketsByCategory || []).map(cat => [cat.name, cat.value, '']),
+      ...(stats?.ticketsByCategory || []).map(cat => [cat.name, cat.value, '']),
 
       ['', '', ''],
       // Tickets por estado
       ['Estado', 'Cantidad', ''],
-      ...(stats.ticketsByStatus || []).map(status => [status.status, status.count, '']),
+      ...(stats?.ticketsByStatus || []).map(status => [status.status, status.count, '']),
 
       ['', '', ''],
       // Actividad reciente (últimos 10 tickets)
@@ -178,20 +178,20 @@ export default function AdminStatsPage() {
       ['', '', ''],
       ['MÉTRICAS PRINCIPALES', '', ''],
       ['Métrica', 'Valor', 'Cambio'],
-      ['Tickets Abiertos', stats.stats?.open?.value || 0, stats.stats?.open?.change || 'N/A'],
-      ['Tickets en Progreso', stats.stats?.inProgress?.value || 0, stats.stats?.inProgress?.change || 'N/A'],
-      ['Tickets Resueltos', stats.stats?.resolved?.value || 0, stats.stats?.resolved?.change || 'N/A'],
-      ['Tickets Críticos', stats.stats?.critical?.value || 0, stats.stats?.critical?.change || 'N/A'],
+      ['Tickets Abiertos', stats?.stats?.open?.value || 0, stats?.stats?.open?.change || 'N/A'],
+      ['Tickets en Progreso', stats?.stats?.inProgress?.value || 0, stats?.stats?.inProgress?.change || 'N/A'],
+      ['Tickets Resueltos', stats?.stats?.resolved?.value || 0, stats?.stats?.resolved?.change || 'N/A'],
+      ['Tickets Críticos', stats?.stats?.critical?.value || 0, stats?.stats?.critical?.change || 'N/A'],
       ['', '', ''],
       ['CUMPLIMIENTO SLA', '', ''],
       ['Aspecto', 'Porcentaje', ''],
-      ['Cumplidos', `${stats.slaCompliance?.met || 0}%`, ''],
-      ['En Riesgo', `${stats.slaCompliance?.atRisk || 0}%`, ''],
-      ['Incumplidos', `${stats.slaCompliance?.breached || 0}%`, ''],
+      ['Cumplidos', `${stats?.slaCompliance?.met || 0}%`, ''],
+      ['En Riesgo', `${stats?.slaCompliance?.atRisk || 0}%`, ''],
+      ['Incumplidos', `${stats?.slaCompliance?.breached || 0}%`, ''],
       ['', '', ''],
       ['SATISFACCIÓN DEL CLIENTE', '', ''],
-      ['Puntuación Promedio', stats.satisfaction?.score || '0', ''],
-      ['Total de Evaluaciones', stats.satisfaction?.count || 0, '']
+      ['Puntuación Promedio', stats?.satisfaction?.score || '0', ''],
+      ['Total de Evaluaciones', stats?.satisfaction?.count || 0, '']
     ]
 
     const generalSheet = XLSX.utils.aoa_to_sheet(generalData)
@@ -201,7 +201,7 @@ export default function AdminStatsPage() {
     const categoryData = [
       ['Tickets por Categoría', ''],
       ['Categoría', 'Cantidad'],
-      ...(stats.ticketsByCategory || []).map(cat => [cat.name, cat.value])
+      ...(stats?.ticketsByCategory || []).map(cat => [cat.name, cat.value])
     ]
 
     const categorySheet = XLSX.utils.aoa_to_sheet(categoryData)
@@ -211,7 +211,7 @@ export default function AdminStatsPage() {
     const statusData = [
       ['Tickets por Estado', ''],
       ['Estado', 'Cantidad'],
-      ...(stats.ticketsByStatus || []).map(status => [status.status, status.count])
+      ...(stats?.ticketsByStatus || []).map(status => [status.status, status.count])
     ]
 
     const statusSheet = XLSX.utils.aoa_to_sheet(statusData)
@@ -260,10 +260,10 @@ export default function AdminStatsPage() {
     if (!stats) return;
     const mainStatsData = [
       ['Métrica', 'Valor', 'Cambio'],
-      ['Tickets Abiertos', (stats.stats?.open?.value || 0).toString(), stats.stats?.open?.change || 'N/A'],
-      ['Tickets en Progreso', (stats.stats?.inProgress?.value || 0).toString(), stats.stats?.inProgress?.change || 'N/A'],
-      ['Tickets Resueltos', (stats.stats?.resolved?.value || 0).toString(), stats.stats?.resolved?.change || 'N/A'],
-      ['Tickets Críticos', (stats.stats?.critical?.value || 0).toString(), stats.stats?.critical?.change || 'N/A']
+      ['Tickets Abiertos', (stats?.stats?.open?.value || 0).toString(), stats?.stats?.open?.change || 'N/A'],
+      ['Tickets en Progreso', (stats?.stats?.inProgress?.value || 0).toString(), stats?.stats?.inProgress?.change || 'N/A'],
+      ['Tickets Resueltos', (stats?.stats?.resolved?.value || 0).toString(), stats?.stats?.resolved?.change || 'N/A'],
+      ['Tickets Críticos', (stats?.stats?.critical?.value || 0).toString(), stats?.stats?.critical?.change || 'N/A']
     ]
 
     autoTable(doc, {
@@ -281,9 +281,9 @@ export default function AdminStatsPage() {
 
     const slaData = [
       ['Aspecto', 'Porcentaje'],
-      ['Cumplidos', `${stats.slaCompliance?.met || 0}%`],
-      ['En Riesgo', `${stats.slaCompliance?.atRisk || 0}%`],
-      ['Incumplidos', `${stats.slaCompliance?.breached || 0}%`]
+      ['Cumplidos', `${stats?.slaCompliance?.met || 0}%`],
+      ['En Riesgo', `${stats?.slaCompliance?.atRisk || 0}%`],
+      ['Incumplidos', `${stats?.slaCompliance?.breached || 0}%`]
     ]
 
     autoTable(doc, {
@@ -299,8 +299,8 @@ export default function AdminStatsPage() {
     doc.setFontSize(16)
     doc.text('Satisfacción del Cliente', 20, yPosition)
     doc.setFontSize(12)
-    doc.text(`Puntuación Promedio: ${stats.satisfaction?.score || '0'} / 5.0`, 20, yPosition + 10)
-    doc.text(`Total de Evaluaciones: ${stats.satisfaction?.count || 0}`, 20, yPosition + 20)
+    doc.text(`Puntuación Promedio: ${stats?.satisfaction?.score || '0'} / 5.0`, 20, yPosition + 10)
+    doc.text(`Total de Evaluaciones: ${stats?.satisfaction?.count || 0}`, 20, yPosition + 20)
 
     yPosition += 35
 
@@ -316,7 +316,7 @@ export default function AdminStatsPage() {
 
     const categoryData = [
       ['Categoría', 'Cantidad'],
-      ...(stats.ticketsByCategory || []).map(cat => [cat.name, cat.value.toString()])
+      ...(stats?.ticketsByCategory || []).map(cat => [cat.name, cat.value.toString()])
     ]
 
     autoTable(doc, {
@@ -340,7 +340,7 @@ export default function AdminStatsPage() {
 
     const statusData = [
       ['Estado', 'Cantidad'],
-      ...(stats.ticketsByStatus || []).map(status => [status.status, status.count.toString()])
+      ...(stats?.ticketsByStatus || []).map(status => [status.status, status.count.toString()])
     ]
 
     autoTable(doc, {
@@ -449,9 +449,9 @@ export default function AdminStatsPage() {
             <Ticket className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{stats.stats.open?.value ?? 0}</div>
+            <div className="text-2xl font-bold text-orange-600">{stats?.stats?.open?.value ?? 0}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.stats.open?.change?.startsWith('+') ? '+' : ''}{stats.stats.open?.change ?? 'N/A'}
+              {stats?.stats?.open?.change?.startsWith('+') ? '+' : ''}{stats?.stats?.open?.change ?? 'N/A'}
             </p>
           </CardContent>
         </Card>
@@ -462,7 +462,7 @@ export default function AdminStatsPage() {
             <Activity className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats.stats.inProgress?.value ?? 0}</div>
+            <div className="text-2xl font-bold text-blue-600">{stats?.stats?.inProgress?.value ?? 0}</div>
             <p className="text-xs text-muted-foreground">Activos actualmente</p>
           </CardContent>
         </Card>
@@ -473,9 +473,9 @@ export default function AdminStatsPage() {
             <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.stats.resolved?.value ?? 0}</div>
+            <div className="text-2xl font-bold text-green-600">{stats?.stats?.resolved?.value ?? 0}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.stats.resolved?.change?.startsWith('+') ? '+' : ''}{stats.stats.resolved?.change ?? 'N/A'}
+              {stats?.stats?.resolved?.change?.startsWith('+') ? '+' : ''}{stats?.stats?.resolved?.change ?? 'N/A'}
             </p>
           </CardContent>
         </Card>
@@ -486,9 +486,9 @@ export default function AdminStatsPage() {
             <AlertTriangle className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{stats.stats.critical?.value ?? 0}</div>
+            <div className="text-2xl font-bold text-red-600">{stats?.stats?.critical?.value ?? 0}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.stats.critical?.change?.startsWith('+') ? '+' : ''}{stats.stats.critical?.change ?? 'N/A'}
+              {stats?.stats?.critical?.change?.startsWith('+') ? '+' : ''}{stats?.stats?.critical?.change ?? 'N/A'}
             </p>
           </CardContent>
         </Card>

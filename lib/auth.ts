@@ -15,18 +15,32 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Usuario demo fijo
-        if (
-          credentials?.email === "demo@ecotechcare.ca" &&
-          credentials?.password === "demo"
-        ) {
-          return {
-            id: "demo-user",
-            email: "demo@ecotechcare.ca",
-            role: "USER"
-          }
+        if (!credentials?.email || !credentials.password) {
+          return null
         }
-        return null
+
+        // Buscar usuario en la base de datos
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        })
+
+        if (!user || !user.password) {
+          return null
+        }
+
+        const isValid = await bcrypt.compare(credentials.password, user.password)
+
+        if (!isValid) {
+          return null
+        }
+
+        // Devolver sólo los campos necesarios para la sesión/JWT
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        }
       },
     }),
   ],
@@ -49,7 +63,14 @@ export const authOptions: NextAuthOptions = {
       }
       return token
     },
-    async session({ session }) {
+    async session({ session, token }) {
+      if (session.user && token) {
+        // Propagar id y role al objeto de sesión
+        session.user.id = token.id as string
+        session.user.role = token.role as any
+      }
+
+      // Clave de sesión demo (para limpiar datos de prueba)
       session.demoKey = crypto.randomUUID()
       return session
     },

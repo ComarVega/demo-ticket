@@ -33,6 +33,13 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(loginUrl)
       }
 
+      // Forzar login si el usuario es demo
+      if (token.email === "demo@ecotechcare.ca") {
+        const loginUrl = new URL('/login', request.url)
+        loginUrl.searchParams.set('message', 'Por favor inicia sesión para el demo')
+        return NextResponse.redirect(loginUrl)
+      }
+
       // Verificar si el token ha expirado
       if (token.exp && Date.now() >= Number(token.exp) * 1000) {
         const loginUrl = new URL('/login', request.url)
