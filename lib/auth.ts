@@ -15,33 +15,18 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null
+        // Usuario demo fijo
+        if (
+          credentials?.email === "demo@ecotechcare.ca" &&
+          credentials?.password === "demo"
+        ) {
+          return {
+            id: "demo-user",
+            email: "demo@ecotechcare.ca",
+            role: "USER"
+          }
         }
-
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        })
-
-        if (!user || !user.active) {
-          return null
-        }
-
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        )
-
-        if (!isPasswordValid) {
-          return null
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        }
+        return null
       },
     }),
   ],
@@ -64,11 +49,8 @@ export const authOptions: NextAuthOptions = {
       }
       return token
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
-        session.user.role = token.role as "USER" | "TECHNICIAN" | "ADMIN"
-      }
+    async session({ session }) {
+      session.demoKey = crypto.randomUUID()
       return session
     },
   },

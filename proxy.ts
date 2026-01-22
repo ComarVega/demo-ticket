@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
+export { default } from "next-auth/middleware"
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -33,7 +34,7 @@ export async function proxy(request: NextRequest) {
       }
 
       // Verificar si el token ha expirado
-      if (token.exp && Date.now() >= token.exp * 1000) {
+      if (token.exp && Date.now() >= Number(token.exp) * 1000) {
         const loginUrl = new URL('/login', request.url)
         loginUrl.searchParams.set('message', 'Sesión expirada')
         return NextResponse.redirect(loginUrl)
@@ -61,5 +62,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|public/).*)'],
+  matcher: ["/((?!api|_next|favicon.ico).*)"]
 }

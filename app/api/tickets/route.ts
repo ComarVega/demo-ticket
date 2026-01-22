@@ -369,3 +369,4 @@ export async function DELETE(request: NextRequest) {
     )
   }
 }
+    // DELETE /api/tickets - Deshabilitado en demo

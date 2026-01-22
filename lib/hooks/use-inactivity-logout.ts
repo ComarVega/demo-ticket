@@ -20,8 +20,8 @@ export function useInactivityLogout(options: UseInactivityLogoutOptions = {}) {
   } = options
 
   const router = useRouter()
-  const timeoutRef = useRef<NodeJS.Timeout>()
-  const promptTimeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const promptTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const lastActivityRef = useRef<number>(Date.now())
   const promptShownRef = useRef<boolean>(false)
 

@@ -30,6 +30,19 @@ export default function RootLayout({
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
         <Providers>
+          <div style={{
+            background: '#fffbe6',
+            color: '#ad6800',
+            borderBottom: '1px solid #ffe58f',
+            padding: '10px 0',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: '1rem',
+            letterSpacing: '0.5px',
+            zIndex: 1000
+          }}>
+            ⚠ Demo environment – data resets automatically
+          </div>
           {children}
         </Providers>
       </body>

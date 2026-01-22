@@ -15,7 +15,37 @@ type PeriodType = "all" | "1y" | "6m" | "3m" | "30d" | "7d"
 export default function AdminStatsPage() {
   const { data: session } = useSession()
   const router = useRouter()
-  const [stats, setStats] = useState(null)
+  type StatsType = {
+    stats: {
+      open?: { value?: number; change?: string };
+      inProgress?: { value?: number; change?: string };
+      resolved?: { value?: number; change?: string };
+      critical?: { value?: number; change?: string };
+    };
+    slaCompliance?: {
+      met?: number;
+      atRisk?: number;
+      breached?: number;
+    };
+    satisfaction?: {
+      score?: string;
+      count?: number;
+    };
+    ticketsByCategory?: Array<{ name: string; value: number }>;
+    ticketsByStatus?: Array<{ status: string; count: number }>;
+    recentTickets?: Array<{
+      id: string;
+      ticketNumber: string;
+      title: string;
+      status: string;
+      priority: string;
+      createdBy: string;
+      assignedTo?: string | null;
+      createdAt: string;
+      slaStatus?: string;
+    }>;
+  };
+  const [stats, setStats] = useState<StatsType | null>(null)
   const [loading, setLoading] = useState(true)
   const [period, setPeriod] = useState<PeriodType>("30d")
   const [exporting, setExporting] = useState(false)
@@ -71,6 +101,7 @@ export default function AdminStatsPage() {
     const { default: Papa } = await import('papaparse')
 
       // Preparar datos para CSV
+    if (!stats) return;
     const csvData = [
       // Header
       ['Métrica', 'Valor', 'Cambio'],
@@ -78,10 +109,10 @@ export default function AdminStatsPage() {
       ['', '', ''],
 
       // Estadísticas principales
-      ['Tickets Abiertos', stats.stats?.open?.value || 0, stats.stats?.open?.change || 'N/A'],
-      ['Tickets en Progreso', stats.stats?.inProgress?.value || 0, stats.stats?.inProgress?.change || 'N/A'],
-      ['Tickets Resueltos', stats.stats?.resolved?.value || 0, stats.stats?.resolved?.change || 'N/A'],
-      ['Tickets Críticos', stats.stats?.critical?.value || 0, stats.stats?.critical?.change || 'N/A'],
+      ['Tickets Abiertos', stats?.stats?.open?.value || 0, stats?.stats?.open?.change || 'N/A'],
+      ['Tickets en Progreso', stats?.stats?.inProgress?.value || 0, stats?.stats?.inProgress?.change || 'N/A'],
+      ['Tickets Resueltos', stats?.stats?.resolved?.value || 0, stats?.stats?.resolved?.change || 'N/A'],
+      ['Tickets Críticos', stats?.stats?.critical?.value || 0, stats?.stats?.critical?.change || 'N/A'],
       ['', '', ''],
 
       // SLA
@@ -139,6 +170,7 @@ export default function AdminStatsPage() {
     const workbook = XLSX.utils.book_new()
 
     // Hoja 1: Estadísticas Generales
+    if (!stats) return;
     const generalData = [
       ['Estadísticas del Sistema de Tickets', '', ''],
       ['Período:', getPeriodLabel(period), ''],
@@ -225,6 +257,7 @@ export default function AdminStatsPage() {
     doc.setFontSize(16)
     doc.text('Métricas Principales', 20, 65)
 
+    if (!stats) return;
     const mainStatsData = [
       ['Métrica', 'Valor', 'Cambio'],
       ['Tickets Abiertos', (stats.stats?.open?.value || 0).toString(), stats.stats?.open?.change || 'N/A'],
@@ -318,7 +351,7 @@ export default function AdminStatsPage() {
     })
 
     // Pie de página
-    const pageCount = doc.getNumberOfPages()
+    const pageCount = doc.internal.getNumberOfPages()
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i)
       doc.setFontSize(10)
@@ -416,9 +449,9 @@ export default function AdminStatsPage() {
             <Ticket className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{stats.stats.open.value}</div>
+            <div className="text-2xl font-bold text-orange-600">{stats.stats.open?.value ?? 0}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.stats.open.change.startsWith('+') ? '+' : ''}{stats.stats.open.change}
+              {stats.stats.open?.change?.startsWith('+') ? '+' : ''}{stats.stats.open?.change ?? 'N/A'}
             </p>
           </CardContent>
         </Card>
@@ -429,7 +462,7 @@ export default function AdminStatsPage() {
             <Activity className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats.stats.inProgress.value}</div>
+            <div className="text-2xl font-bold text-blue-600">{stats.stats.inProgress?.value ?? 0}</div>
             <p className="text-xs text-muted-foreground">Activos actualmente</p>
           </CardContent>
         </Card>
@@ -440,9 +473,9 @@ export default function AdminStatsPage() {
             <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.stats.resolved.value}</div>
+            <div className="text-2xl font-bold text-green-600">{stats.stats.resolved?.value ?? 0}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.stats.resolved.change.startsWith('+') ? '+' : ''}{stats.stats.resolved.change}
+              {stats.stats.resolved?.change?.startsWith('+') ? '+' : ''}{stats.stats.resolved?.change ?? 'N/A'}
             </p>
           </CardContent>
         </Card>
@@ -453,9 +486,9 @@ export default function AdminStatsPage() {
             <AlertTriangle className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{stats.stats.critical.value}</div>
+            <div className="text-2xl font-bold text-red-600">{stats.stats.critical?.value ?? 0}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.stats.critical.change.startsWith('+') ? '+' : ''}{stats.stats.critical.change}
+              {stats.stats.critical?.change?.startsWith('+') ? '+' : ''}{stats.stats.critical?.change ?? 'N/A'}
             </p>
           </CardContent>
         </Card>
@@ -474,22 +507,22 @@ export default function AdminStatsPage() {
             <div className="space-y-4">
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600 mb-2">
-                  {stats.slaCompliance.met}%
+                  {stats.slaCompliance?.met ?? 0}%
                 </div>
                 <p className="text-sm text-gray-600">SLA Cumplido</p>
               </div>
 
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className="text-lg font-semibold text-green-600">{stats.slaCompliance.met}%</div>
+                  <div className="text-lg font-semibold text-green-600">{stats.slaCompliance?.met ?? 0}%</div>
                   <p className="text-xs text-gray-600">Cumplidos</p>
                 </div>
                 <div>
-                  <div className="text-lg font-semibold text-yellow-600">{stats.slaCompliance.atRisk}%</div>
+                  <div className="text-lg font-semibold text-yellow-600">{stats.slaCompliance?.atRisk ?? 0}%</div>
                   <p className="text-xs text-gray-600">En Riesgo</p>
                 </div>
                 <div>
-                  <div className="text-lg font-semibold text-red-600">{stats.slaCompliance.breached}%</div>
+                  <div className="text-lg font-semibold text-red-600">{stats.slaCompliance?.breached ?? 0}%</div>
                   <p className="text-xs text-gray-600">Incumplidos</p>
                 </div>
               </div>
@@ -511,19 +544,19 @@ export default function AdminStatsPage() {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span
                       key={star}
-                      className={`w-6 h-6 ${star <= Math.floor(parseFloat(stats.satisfaction.score)) ? "text-yellow-400" : "text-gray-300"}`}
+                       className={`w-6 h-6 ${star <= Math.floor(parseFloat(stats.satisfaction?.score ?? '0')) ? "text-yellow-400" : "text-gray-300"}`}
                     >
                       ★
                     </span>
                   ))}
                 </div>
                 <div className="text-left">
-                  <p className="text-2xl font-bold">{stats.satisfaction.score}</p>
+                  <p className="text-2xl font-bold">{stats.satisfaction?.score ?? '0'}</p>
                   <p className="text-sm text-gray-600">de 5.0</p>
                 </div>
               </div>
               <p className="text-gray-600">
-                Basado en {stats.satisfaction.count} evaluaciones
+                Basado en {stats.satisfaction?.count ?? 0} evaluaciones
               </p>
             </div>
           </CardContent>
@@ -541,15 +574,15 @@ export default function AdminStatsPage() {
               <PieChart>
                 <Pie
                   data={[
-                    { name: 'Abiertos', value: stats.stats.open.value, fill: '#f59e0b' },
-                    { name: 'En Progreso', value: stats.stats.inProgress.value, fill: '#3b82f6' },
-                    { name: 'Resueltos', value: stats.stats.resolved.value, fill: '#10b981' },
-                    { name: 'Críticos', value: stats.stats.critical.value, fill: '#ef4444' }
+                    { name: 'Abiertos', value: stats.stats.open?.value ?? 0, fill: '#f59e0b' },
+                    { name: 'En Progreso', value: stats.stats.inProgress?.value ?? 0, fill: '#3b82f6' },
+                    { name: 'Resueltos', value: stats.stats.resolved?.value ?? 0, fill: '#10b981' },
+                    { name: 'Críticos', value: stats.stats.critical?.value ?? 0, fill: '#ef4444' }
                   ]}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                   label={({ name, percent }) => `${name}: ${percent !== undefined ? (percent * 100).toFixed(0) : '0'}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
@@ -622,7 +655,7 @@ export default function AdminStatsPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {stats.recentTickets.slice(0, 10).map((ticket) => (
+            {(stats.recentTickets ?? []).slice(0, 10).map((ticket) => (
               <div key={ticket.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">

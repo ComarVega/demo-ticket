@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import prisma from "@/lib/prisma"
+
+declare module "next-auth" {
+  interface Session {
+    demoKey?: string;
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,9 +16,13 @@ export async function POST(request: NextRequest) {
 
     const session = await getServerSession(authOptions)
 
-    if (session?.user) {
-      // Aquí podríamos hacer alguna limpieza adicional si fuera necesario
-      console.log(`Sesión cerrada automáticamente para usuario: ${session.user.email}`)
+
+    // Borrado de tickets demo al cerrar sesión
+    if (session?.demoKey) {
+      await prisma.ticket.deleteMany({
+        where: { demoKey: session.demoKey }
+      })
+      console.log(`Tickets demo eliminados para demoKey: ${session.demoKey}`)
     }
 
     // Retornar respuesta exitosa

@@ -20,9 +20,9 @@ export async function GET(request: Request) {
     // Construir filtros
     const where: Prisma.TicketWhereInput = {}
     
-    if (status) where.status = status as Prisma.TicketStatus
-    if (priority) where.priority = priority as Prisma.Priority
-    if (category) where.category = category as Prisma.Category
+    if (status) where.status = status as any
+    if (priority) where.priority = priority as any
+    if (category) where.category = category as any
 
     // Si no es admin, solo ver sus tickets
     if (session.user.role !== 'ADMIN' && session.user.role !== 'TECHNICIAN') {
