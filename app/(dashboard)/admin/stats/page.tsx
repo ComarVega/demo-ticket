@@ -102,6 +102,7 @@ export default function AdminStatsPage() {
 
       // Preparar datos para CSV
     if (!stats) return;
+    const currentStats = stats
     const csvData = [
       // Header
       ['Métrica', 'Valor', 'Cambio'],
@@ -109,37 +110,37 @@ export default function AdminStatsPage() {
       ['', '', ''],
 
       // Estadísticas principales
-      ['Tickets Abiertos', stats?.stats?.open?.value || 0, stats?.stats?.open?.change || 'N/A'],
-      ['Tickets en Progreso', stats?.stats?.inProgress?.value || 0, stats?.stats?.inProgress?.change || 'N/A'],
-      ['Tickets Resueltos', stats?.stats?.resolved?.value || 0, stats?.stats?.resolved?.change || 'N/A'],
-      ['Tickets Críticos', stats?.stats?.critical?.value || 0, stats?.stats?.critical?.change || 'N/A'],
+      ['Tickets Abiertos', currentStats.stats.open?.value || 0, currentStats.stats.open?.change || 'N/A'],
+      ['Tickets en Progreso', currentStats.stats.inProgress?.value || 0, currentStats.stats.inProgress?.change || 'N/A'],
+      ['Tickets Resueltos', currentStats.stats.resolved?.value || 0, currentStats.stats.resolved?.change || 'N/A'],
+      ['Tickets Críticos', currentStats.stats.critical?.value || 0, currentStats.stats.critical?.change || 'N/A'],
       ['', '', ''],
 
       // SLA
-      ['Cumplimiento SLA', `${stats?.slaCompliance?.met || 0}%`, ''],
-      ['SLA Cumplidos', `${stats?.slaCompliance?.met || 0}%`, ''],
-      ['SLA en Riesgo', `${stats?.slaCompliance?.atRisk || 0}%`, ''],
-      ['SLA Incumplidos', `${stats?.slaCompliance?.breached || 0}%`, ''],
+      ['Cumplimiento SLA', `${currentStats.slaCompliance?.met || 0}%`, ''],
+      ['SLA Cumplidos', `${currentStats.slaCompliance?.met || 0}%`, ''],
+      ['SLA en Riesgo', `${currentStats.slaCompliance?.atRisk || 0}%`, ''],
+      ['SLA Incumplidos', `${currentStats.slaCompliance?.breached || 0}%`, ''],
       ['', '', ''],
 
       // Satisfacción
-      ['Satisfacción del Cliente', stats?.satisfaction?.score || '0', ''],
-      ['Total Evaluaciones', stats?.satisfaction?.count || 0, ''],
+      ['Satisfacción del Cliente', currentStats.satisfaction?.score || '0', ''],
+      ['Total Evaluaciones', currentStats.satisfaction?.count || 0, ''],
       ['', '', ''],
 
       // Tickets por categoría
       ['Categoría', 'Cantidad', ''],
-      ...(stats?.ticketsByCategory || []).map(cat => [cat.name, cat.value, '']),
+      ...(currentStats.ticketsByCategory || []).map(cat => [cat.name, cat.value, '']),
 
       ['', '', ''],
       // Tickets por estado
       ['Estado', 'Cantidad', ''],
-      ...(stats?.ticketsByStatus || []).map(status => [status.status, status.count, '']),
+      ...(currentStats.ticketsByStatus || []).map(status => [status.status, status.count, '']),
 
       ['', '', ''],
       // Actividad reciente (últimos 10 tickets)
       ['Ticket', 'Título', 'Estado', 'Prioridad', 'Creado por', 'Fecha'],
-      ...(stats.recentTickets || []).slice(0, 10).map(ticket => [
+      ...(currentStats.recentTickets || []).slice(0, 10).map(ticket => [
         `#${ticket.ticketNumber}`,
         ticket.title,
         ticket.status,
@@ -171,6 +172,7 @@ export default function AdminStatsPage() {
 
     // Hoja 1: Estadísticas Generales
     if (!stats) return;
+    const currentStats = stats
     const generalData = [
       ['Estadísticas del Sistema de Tickets', '', ''],
       ['Período:', getPeriodLabel(period), ''],
@@ -178,20 +180,20 @@ export default function AdminStatsPage() {
       ['', '', ''],
       ['MÉTRICAS PRINCIPALES', '', ''],
       ['Métrica', 'Valor', 'Cambio'],
-      ['Tickets Abiertos', stats?.stats?.open?.value || 0, stats?.stats?.open?.change || 'N/A'],
-      ['Tickets en Progreso', stats?.stats?.inProgress?.value || 0, stats?.stats?.inProgress?.change || 'N/A'],
-      ['Tickets Resueltos', stats?.stats?.resolved?.value || 0, stats?.stats?.resolved?.change || 'N/A'],
-      ['Tickets Críticos', stats?.stats?.critical?.value || 0, stats?.stats?.critical?.change || 'N/A'],
+      ['Tickets Abiertos', currentStats.stats.open?.value || 0, currentStats.stats.open?.change || 'N/A'],
+      ['Tickets en Progreso', currentStats.stats.inProgress?.value || 0, currentStats.stats.inProgress?.change || 'N/A'],
+      ['Tickets Resueltos', currentStats.stats.resolved?.value || 0, currentStats.stats.resolved?.change || 'N/A'],
+      ['Tickets Críticos', currentStats.stats.critical?.value || 0, currentStats.stats.critical?.change || 'N/A'],
       ['', '', ''],
       ['CUMPLIMIENTO SLA', '', ''],
       ['Aspecto', 'Porcentaje', ''],
-      ['Cumplidos', `${stats?.slaCompliance?.met || 0}%`, ''],
-      ['En Riesgo', `${stats?.slaCompliance?.atRisk || 0}%`, ''],
-      ['Incumplidos', `${stats?.slaCompliance?.breached || 0}%`, ''],
+      ['Cumplidos', `${currentStats.slaCompliance?.met || 0}%`, ''],
+      ['En Riesgo', `${currentStats.slaCompliance?.atRisk || 0}%`, ''],
+      ['Incumplidos', `${currentStats.slaCompliance?.breached || 0}%`, ''],
       ['', '', ''],
       ['SATISFACCIÓN DEL CLIENTE', '', ''],
-      ['Puntuación Promedio', stats?.satisfaction?.score || '0', ''],
-      ['Total de Evaluaciones', stats?.satisfaction?.count || 0, '']
+      ['Puntuación Promedio', currentStats.satisfaction?.score || '0', ''],
+      ['Total de Evaluaciones', currentStats.satisfaction?.count || 0, '']
     ]
 
     const generalSheet = XLSX.utils.aoa_to_sheet(generalData)
@@ -201,7 +203,7 @@ export default function AdminStatsPage() {
     const categoryData = [
       ['Tickets por Categoría', ''],
       ['Categoría', 'Cantidad'],
-      ...(stats?.ticketsByCategory || []).map(cat => [cat.name, cat.value])
+      ...(currentStats.ticketsByCategory || []).map(cat => [cat.name, cat.value])
     ]
 
     const categorySheet = XLSX.utils.aoa_to_sheet(categoryData)
@@ -211,7 +213,7 @@ export default function AdminStatsPage() {
     const statusData = [
       ['Tickets por Estado', ''],
       ['Estado', 'Cantidad'],
-      ...(stats?.ticketsByStatus || []).map(status => [status.status, status.count])
+      ...(currentStats.ticketsByStatus || []).map(status => [status.status, status.count])
     ]
 
     const statusSheet = XLSX.utils.aoa_to_sheet(statusData)
@@ -221,7 +223,7 @@ export default function AdminStatsPage() {
     const recentData = [
       ['Actividad Reciente (Últimos 10 tickets)', '', '', '', '', ''],
       ['Ticket', 'Título', 'Estado', 'Prioridad', 'Creado por', 'Fecha de Creación'],
-      ...(stats.recentTickets || []).slice(0, 10).map(ticket => [
+      ...(currentStats.recentTickets || []).slice(0, 10).map(ticket => [
         `#${ticket.ticketNumber}`,
         ticket.title,
         ticket.status,
@@ -242,7 +244,11 @@ export default function AdminStatsPage() {
     const { default: jsPDF } = await import('jspdf')
     const { default: autoTable } = await import('jspdf-autotable')
 
-    const doc = new jsPDF()
+    type JsPDFWithAutoTable = InstanceType<typeof jsPDF> & {
+      lastAutoTable?: { finalY: number }
+    }
+
+    const doc: JsPDFWithAutoTable = new jsPDF() as JsPDFWithAutoTable
 
     // Título
     doc.setFontSize(20)
@@ -258,12 +264,13 @@ export default function AdminStatsPage() {
     doc.text('Métricas Principales', 20, 65)
 
     if (!stats) return;
+    const currentStats = stats
     const mainStatsData = [
       ['Métrica', 'Valor', 'Cambio'],
-      ['Tickets Abiertos', (stats?.stats?.open?.value || 0).toString(), stats?.stats?.open?.change || 'N/A'],
-      ['Tickets en Progreso', (stats?.stats?.inProgress?.value || 0).toString(), stats?.stats?.inProgress?.change || 'N/A'],
-      ['Tickets Resueltos', (stats?.stats?.resolved?.value || 0).toString(), stats?.stats?.resolved?.change || 'N/A'],
-      ['Tickets Críticos', (stats?.stats?.critical?.value || 0).toString(), stats?.stats?.critical?.change || 'N/A']
+      ['Tickets Abiertos', (currentStats.stats.open?.value || 0).toString(), currentStats.stats.open?.change || 'N/A'],
+      ['Tickets en Progreso', (currentStats.stats.inProgress?.value || 0).toString(), currentStats.stats.inProgress?.change || 'N/A'],
+      ['Tickets Resueltos', (currentStats.stats.resolved?.value || 0).toString(), currentStats.stats.resolved?.change || 'N/A'],
+      ['Tickets Críticos', (currentStats.stats.critical?.value || 0).toString(), currentStats.stats.critical?.change || 'N/A']
     ]
 
     autoTable(doc, {
@@ -273,7 +280,7 @@ export default function AdminStatsPage() {
       theme: 'grid'
     })
 
-    let yPosition = (doc as any).lastAutoTable.finalY + 20
+    let yPosition = (doc.lastAutoTable?.finalY ?? 70) + 20
 
     // SLA Compliance
     doc.setFontSize(16)
@@ -281,9 +288,9 @@ export default function AdminStatsPage() {
 
     const slaData = [
       ['Aspecto', 'Porcentaje'],
-      ['Cumplidos', `${stats?.slaCompliance?.met || 0}%`],
-      ['En Riesgo', `${stats?.slaCompliance?.atRisk || 0}%`],
-      ['Incumplidos', `${stats?.slaCompliance?.breached || 0}%`]
+      ['Cumplidos', `${currentStats.slaCompliance?.met || 0}%`],
+      ['En Riesgo', `${currentStats.slaCompliance?.atRisk || 0}%`],
+      ['Incumplidos', `${currentStats.slaCompliance?.breached || 0}%`]
     ]
 
     autoTable(doc, {
@@ -293,14 +300,14 @@ export default function AdminStatsPage() {
       theme: 'grid'
     })
 
-    yPosition = (doc as any).lastAutoTable.finalY + 20
+    yPosition = (doc.lastAutoTable?.finalY ?? yPosition) + 20
 
     // Satisfacción
     doc.setFontSize(16)
     doc.text('Satisfacción del Cliente', 20, yPosition)
     doc.setFontSize(12)
-    doc.text(`Puntuación Promedio: ${stats?.satisfaction?.score || '0'} / 5.0`, 20, yPosition + 10)
-    doc.text(`Total de Evaluaciones: ${stats?.satisfaction?.count || 0}`, 20, yPosition + 20)
+    doc.text(`Puntuación Promedio: ${currentStats.satisfaction?.score || '0'} / 5.0`, 20, yPosition + 10)
+    doc.text(`Total de Evaluaciones: ${currentStats.satisfaction?.count || 0}`, 20, yPosition + 20)
 
     yPosition += 35
 
@@ -316,7 +323,7 @@ export default function AdminStatsPage() {
 
     const categoryData = [
       ['Categoría', 'Cantidad'],
-      ...(stats?.ticketsByCategory || []).map(cat => [cat.name, cat.value.toString()])
+      ...(currentStats.ticketsByCategory || []).map(cat => [cat.name, cat.value.toString()])
     ]
 
     autoTable(doc, {
@@ -326,7 +333,7 @@ export default function AdminStatsPage() {
       theme: 'grid'
     })
 
-    yPosition = (doc as any).lastAutoTable.finalY + 20
+    yPosition = (doc.lastAutoTable?.finalY ?? yPosition) + 20
 
     // Nueva página si es necesario
     if (yPosition > 200) {
@@ -340,7 +347,7 @@ export default function AdminStatsPage() {
 
     const statusData = [
       ['Estado', 'Cantidad'],
-      ...(stats?.ticketsByStatus || []).map(status => [status.status, status.count.toString()])
+      ...(currentStats.ticketsByStatus || []).map(status => [status.status, status.count.toString()])
     ]
 
     autoTable(doc, {
