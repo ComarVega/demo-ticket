@@ -1,0 +1,62 @@
+﻿cmd.exe : 
+<anonymous_script>:1
+At line:1 char:1
++ cmd.exe /c "npx ts-node 
+--compiler-options 
+\"{\\\"module\\\":\\\"Comm 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (<anonym  
+  ous_script>:1:String) []   
+ , RemoteException
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+"
+
+SyntaxError: Unterminated 
+string in JSON at position 1 
+(line 1 column 2)
+    at JSON.parse 
+(<anonymous>)
+    at Object.parse 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\ts-node\dist\index.
+js:38:25)
+    at Object.<anonymous> 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\ts-node\dist\_bin.j
+s:99:30)
+    at Module._compile (node:
+internal/modules/cjs/loader:1
+761:14)
+    at Object..js (node:inter
+nal/modules/cjs/loader:1893:1
+0)
+    at Module.load (node:inte
+rnal/modules/cjs/loader:1481:
+32)
+    at Module._load (node:int
+ernal/modules/cjs/loader:1300
+:12)
+    at 
+TracingChannel.traceSync (nod
+e:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:i
+nternal/modules/cjs/loader:24
+5:24)
+    at 
+Module.executeUserEntryPoint 
+[as runMain] (node:internal/m
+odules/run_main:154:5)
+
+Node.js v24.12.0

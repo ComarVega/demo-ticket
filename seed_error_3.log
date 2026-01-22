@@ -1,0 +1,104 @@
+﻿
+> ticket-system@0.1.0 prisma:seed
+> ts-node -P tsconfig.seed.json prisma/seed.ts
+
+node.exe : 
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Users\Cesar 
+Omar\AppData\Roa ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (:String  
+  ) [], RemoteException
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:152797
+      fileExists: (fileName) 
+=> host.fileExists(fileName),
+                             
+        ^
+TypeError: host.fileExists 
+is not a function
+    at Object.fileExists 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:152797:38)
+    at 
+Object.host.fileExists 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:126341:41)
+    at getPackageJsonInfo 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:45728:31)
+    at loadModuleFromSpecific
+NodeModulesDirectory 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:46366:21)
+    at loadModuleFromImmediat
+eNodeModulesDirectory 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:46343:27)
+    at C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:46321:33
+    at C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:46331:20
+    at 
+forEachAncestorDirectory 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:9148:20)
+    at forEachAncestorDirecto
+ryStoppingAtGlobalCache 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:46330:10)
+    at lookup 
+(C:\Users\Cesar 
+Omar\Documents\Portafolio\1 
+Sistema de gestion de 
+tickets web\ticket-system\nod
+e_modules\typescript\lib\type
+script.js:46312:12)

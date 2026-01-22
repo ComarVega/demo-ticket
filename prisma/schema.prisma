@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String        @id @default(cuid())
+  email             String        @unique
+  name              String
+  password          String
+  role              Role          @default(USER)
+  department        String?
+  location          String?
+  active            Boolean       @default(true)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  activityLogs      ActivityLog[]
+  comments          Comment[]
+  ticketsAssigned   Ticket[]      @relation("AssignedTo")
+  ticketsCreated    Ticket[]      @relation("CreatedBy")
+  resetToken        String?       @unique
+  resetTokenExpiry  DateTime?
+  notifications     Notification[]
+}
+
+
+model Notification {
+  id          String   @id @default(cuid())
+  title       String
+  message     String   @db.Text
+  type        NotificationType @default(INFO)
+  read        Boolean  @default(false)
+  link        String?
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+model Ticket {
+  id               String        @id @default(cuid())
+  ticketNumber     Int           @unique @default(autoincrement())
+  title            String
+  description      String
+  status           TicketStatus  @default(OPEN)
+  priority         Priority      @default(MEDIUM)
+  category         Category
+  type             TicketType    @default(INCIDENT)
+  createdById      String
+  assignedToId     String?
+  location         String?
+  device           String?
+  os               String?
+  isOperational    Boolean?
+  solution         String?
+  rootCause        String?
+  timeSpent        Int?
+  requiresFollowup Boolean       @default(false)
+  rating           Int?          @db.SmallInt
+  feedback         String?
+  slaDeadline      DateTime?
+  resolvedAt       DateTime?
+  closedAt         DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  activityLogs     ActivityLog[]
+  attachments      Attachment[]
+  comments         Comment[]
+  assignedTo       User?         @relation("AssignedTo", fields: [assignedToId], references: [id])
+  createdBy        User          @relation("CreatedBy", fields: [createdById], references: [id])
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  content    String
+  isInternal Boolean  @default(false)
+  ticketId   String
+  authorId   String
+  createdAt  DateTime @default(now())
+  author     User     @relation(fields: [authorId], references: [id])
+  ticket     Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+}
+
+model Attachment {
+  id         String   @id @default(cuid())
+  filename   String
+  url        String
+  size       Int
+  mimeType   String
+  ticketId   String
+  uploadedAt DateTime @default(now())
+  ticket     Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String
+  details   String?
+  ticketId  String?
+  userId    String
+  createdAt DateTime @default(now())
+  ticket    Ticket?  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  USER
+  TECHNICIAN
+  ADMIN
+}
+
+enum TicketStatus {
+  OPEN
+  IN_REVIEW
+  WAITING_USER
+  ASSIGNED
+  RESOLVED
+  CLOSED
+  REOPENED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum Category {
+  HARDWARE
+  SOFTWARE
+  NETWORK
+  ACCESS
+  OTHER
+}
+
+enum TicketType {
+  INCIDENT
+  REQUEST
+  MAINTENANCE
+}
